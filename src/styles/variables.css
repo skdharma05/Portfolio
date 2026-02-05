@@ -1,0 +1,35 @@
+:root {
+  /* Colors - Dark Theme */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+  --bg-card: #252525;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-accent: #646cff;
+
+  --primary: #646cff;
+  --primary-hover: #535bf2;
+  --secondary: #ff4081;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #646cff 0%, #ff4081 100%);
+  --gradient-text: linear-gradient(to right, #646cff, #ff4081);
+
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+  --space-xl: 8rem;
+
+  /* Typography */
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  --font-size-3xl: 3rem;
+  --font-size-4xl: 4rem;
+}
