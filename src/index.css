@@ -1,2 +1,83 @@
-@import './styles/variables.css';
-@import './styles/global.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-bg-primary text-text-primary font-sans overflow-x-hidden;
+    background: #0a0a0a;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { @apply bg-bg-primary; }
+  ::-webkit-scrollbar-thumb { @apply bg-primary/40 rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-primary; }
+
+  /* Selection color */
+  ::selection { @apply bg-primary/30 text-white; }
+}
+
+@layer components {
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+
+  .gradient-text-cyan {
+    @apply bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent;
+  }
+
+  .glass-card {
+    @apply bg-bg-card/60 backdrop-blur-md border border-white/5 rounded-2xl;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold
+           bg-gradient-to-r from-primary to-secondary text-white
+           hover:shadow-glow transition-all duration-300
+           hover:scale-105 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold
+           border border-primary/40 text-primary
+           hover:border-primary hover:bg-primary/10 hover:shadow-glow
+           transition-all duration-300 hover:scale-105 active:scale-95;
+  }
+
+  .section-tag {
+    @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium
+           border border-primary/30 text-primary bg-primary/10 mb-4;
+  }
+
+  .section-title {
+    @apply text-4xl md:text-5xl font-bold mb-4;
+  }
+
+  .section-subtitle {
+    @apply text-text-secondary text-lg max-w-2xl mx-auto;
+  }
+
+  .glow-dot {
+    @apply w-2 h-2 rounded-full bg-primary animate-ping-slow;
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+
+  .gradient-border {
+    background: linear-gradient(#0a0a0a, #0a0a0a) padding-box,
+                linear-gradient(135deg, #6366f1, #ec4899) border-box;
+    border: 1px solid transparent;
+  }
+
+  .animated-gradient-bg {
+    background: linear-gradient(-45deg, #6366f1, #ec4899, #06b6d4, #6366f1);
+    background-size: 400% 400%;
+    animation: gradient-shift 8s ease-in-out infinite;
+  }
+}
