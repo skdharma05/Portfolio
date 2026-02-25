@@ -6,19 +6,33 @@
   html {
     scroll-behavior: smooth;
   }
+
   body {
     @apply bg-bg-primary text-text-primary font-sans overflow-x-hidden;
     background: #0a0a0a;
   }
 
   /* Custom scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { @apply bg-bg-primary; }
-  ::-webkit-scrollbar-thumb { @apply bg-primary/40 rounded-full; }
-  ::-webkit-scrollbar-thumb:hover { @apply bg-primary; }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-bg-primary;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/40 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary;
+  }
 
   /* Selection color */
-  ::selection { @apply bg-primary/30 text-white; }
+  ::selection {
+    @apply bg-primary/30 text-white;
+  }
 }
 
 @layer components {
@@ -35,22 +49,15 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold
-           bg-gradient-to-r from-primary to-secondary text-white
-           hover:shadow-glow transition-all duration-300
-           hover:scale-105 active:scale-95;
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-primary to-secondary text-white hover:shadow-glow transition-all duration-300 hover:scale-105 active:scale-95;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold
-           border border-primary/40 text-primary
-           hover:border-primary hover:bg-primary/10 hover:shadow-glow
-           transition-all duration-300 hover:scale-105 active:scale-95;
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold border border-primary/40 text-primary hover:border-primary hover:bg-primary/10 hover:shadow-glow transition-all duration-300 hover:scale-105 active:scale-95;
   }
 
   .section-tag {
-    @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium
-           border border-primary/30 text-primary bg-primary/10 mb-4;
+    @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium border border-primary/30 text-primary bg-primary/10 mb-4;
   }
 
   .section-title {
@@ -67,11 +74,13 @@
 }
 
 @layer utilities {
-  .text-balance { text-wrap: balance; }
+  .text-balance {
+    text-wrap: balance;
+  }
 
   .gradient-border {
     background: linear-gradient(#0a0a0a, #0a0a0a) padding-box,
-                linear-gradient(135deg, #6366f1, #ec4899) border-box;
+      linear-gradient(135deg, #6366f1, #ec4899) border-box;
     border: 1px solid transparent;
   }
 

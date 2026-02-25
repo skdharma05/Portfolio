@@ -6,8 +6,7 @@ import Skills from './components/Skills';
 import Projects from './components/Projects';
 import CallToAction from './components/CallToAction';
 import ResumeDownload from './components/ResumeDownload';
-import CodingProfiles from './components/CodingProfiles';
-import SocialLinks from './components/SocialLinks';
+import Connect from './components/Connect';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 
@@ -26,8 +25,7 @@ function App() {
                     <Projects />
                     <CallToAction />
                     <ResumeDownload />
-                    <CodingProfiles />
-                    <SocialLinks />
+                    <Connect />
                     <Contact />
                 </main>
 

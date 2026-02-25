@@ -7,8 +7,7 @@ const navLinks = [
     { label: 'About', href: '#about' },
     { label: 'Skills', href: '#skills' },
     { label: 'Projects', href: '#projects' },
-    { label: 'Articles', href: '#articles' },
-    { label: 'Profiles', href: '#profiles' },
+    { label: 'Connect', href: '#connect' },
     { label: 'Contact', href: '#contact' },
 ];
 
@@ -41,8 +40,8 @@ const Navbar = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
-                    ? 'bg-bg-primary/80 backdrop-blur-xl border-b border-white/5 shadow-lg'
-                    : 'bg-transparent'
+                ? 'bg-bg-primary/80 backdrop-blur-xl border-b border-white/5 shadow-lg'
+                : 'bg-transparent'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,8 +67,8 @@ const Navbar = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.05 * i + 0.3 }}
                                 className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${activeSection === link.href.replace('#', '')
-                                        ? 'text-primary'
-                                        : 'text-text-secondary hover:text-white'
+                                    ? 'text-primary'
+                                    : 'text-text-secondary hover:text-white'
                                     }`}
                             >
                                 {link.label}
@@ -125,8 +124,8 @@ const Navbar = () => {
                                     transition={{ delay: i * 0.05 }}
                                     onClick={() => setIsOpen(false)}
                                     className={`block px-4 py-3 rounded-xl text-sm font-medium transition-all ${activeSection === link.href.replace('#', '')
-                                            ? 'text-primary bg-primary/10'
-                                            : 'text-text-secondary hover:text-white hover:bg-white/5'
+                                        ? 'text-primary bg-primary/10'
+                                        : 'text-text-secondary hover:text-white hover:bg-white/5'
                                         }`}
                                 >
                                     {link.label}

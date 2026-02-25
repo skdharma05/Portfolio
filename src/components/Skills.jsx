@@ -42,7 +42,6 @@ const SkillCard = ({ category, index }) => {
                     <div key={skill.name}>
                         <div className="flex justify-between mb-1.5">
                             <span className="text-sm text-text-secondary font-medium">{skill.name}</span>
-                            <span className="text-xs text-text-muted font-mono">{skill.proficiency}%</span>
                         </div>
                         <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
                             <motion.div

@@ -1,138 +1,159 @@
-import React, { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { Canvas, extend } from '@react-three/fiber';
+import React, { useRef, useMemo } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
-// ── Node positions forming a layered neural network ──────────────────────────
-const LAYERS = [
-    // Input layer  (x = -3.0)
-    [-3.0, -1.2, 0], [-3.0, -0.4, 0], [-3.0, 0.4, 0], [-3.0, 1.2, 0],
-    // Hidden 1     (x = -1.0)
-    [-1.0, -1.8, 0.3], [-1.0, -0.9, 0.5], [-1.0, 0.0, -0.4], [-1.0, 0.9, 0.6], [-1.0, 1.8, -0.2],
-    // Hidden 2     (x =  1.0)
-    [1.0, -1.4, -0.5], [1.0, -0.5, 0.4], [1.0, 0.4, 0.6], [1.0, 1.4, -0.3],
-    // Output layer (x =  3.0)
-    [3.0, -0.8, 0.2], [3.0, 0.0, -0.3], [3.0, 0.8, 0.1],
-];
+// ── GENERATE BRAIN POINT CLOUD ──────────────────────────────────────────────
+const generateBrainNodes = (count = 200) => {
+    const nodes = [];
+    while (nodes.length < count) {
+        // Random point in an ellipsoid bounding box
+        const x = (Math.random() - 0.5) * 4.0; // Width
+        const y = (Math.random() - 0.5) * 3.0; // Height
+        const z = (Math.random() - 0.5) * 4.5; // Depth (front to back)
 
-// Pairs of node indices that should be connected
-const CONNECTIONS = [
-    // Input → Hidden1
-    [0, 4], [0, 5], [0, 6], [1, 5], [1, 6], [1, 7], [2, 6], [2, 7], [2, 8], [3, 7], [3, 8],
-    // Hidden1 → Hidden2
-    [4, 9], [4, 10], [5, 10], [5, 11], [6, 10], [6, 11], [6, 12], [7, 11], [7, 12], [8, 12],
-    // Hidden2 → Output
-    [9, 13], [9, 14], [10, 14], [10, 15], [11, 14], [11, 15], [12, 14], [12, 15],
-];
+        // Math for a brain-like volume (ellipsoid + hemispheres)
+        const inEllipsoid = (x * x) / 4.0 + (y * y) / 2.25 + (z * z) / 5.06 <= 1;
 
-const NODE_COLORS = [
-    '#818cf8', '#6366f1', // input — indigo
-    '#ec4899', '#f472b6', '#db2777', // hidden1 — pink
-    '#06b6d4', '#22d3ee', '#0891b2', // hidden2 — cyan
-    '#a78bfa', '#8b5cf6', // output — violet
-];
+        if (inEllipsoid) {
+            // Create sagittal fissure (gap between left and right hemispheres)
+            if (Math.abs(x) < 0.2) continue;
 
-// Animated connection line using BufferGeometry
-function Connection({ start, end, index }) {
-    const ref = useRef();
+            // Indent the bottom a bit (cerebellum/brainstem area cut)
+            if (y < -0.8 && z > -0.5 && z < 2.0 && Math.abs(x) < 1.2) continue;
 
-    useFrame(({ clock }) => {
-        if (ref.current) {
-            const t = (Math.sin(clock.elapsedTime * 1.4 + index * 0.7) + 1) / 2;
-            ref.current.material.opacity = 0.08 + t * 0.35;
+            // Frontal lobe is slightly taller, occipital is slightly lower/wider — basic shaping
+            // (We just use the raw ellipsoid for a modern tech feel)
+
+            nodes.push([x, y, z]);
         }
-    });
+    }
+    return nodes;
+};
 
-    const points = [
-        new THREE.Vector3(...start),
-        new THREE.Vector3(...end),
-    ];
-    const geom = new THREE.BufferGeometry().setFromPoints(points);
+// ── CONNECT NEARBY NODES ────────────────────────────────────────────────────
+const generateConnections = (nodes, maxDistSq = 0.8) => {
+    const lines = [];
+    for (let i = 0; i < nodes.length; i++) {
+        let connects = 0;
+        for (let j = i + 1; j < nodes.length; j++) {
+            const dx = nodes[i][0] - nodes[j][0];
+            const dy = nodes[i][1] - nodes[j][1];
+            const dz = nodes[i][2] - nodes[j][2];
+            const distSq = dx * dx + dy * dy + dz * dz;
 
-    return (
-        <line ref={ref} geometry={geom}>
-            <lineBasicMaterial
-                color="#818cf8"
-                transparent
-                opacity={0.2}
-                linewidth={1}
-            />
-        </line>
-    );
-}
-
-// Single pulsing neuron node
-function Node({ position, index }) {
-    const ref = useRef();
-    const color = NODE_COLORS[index % NODE_COLORS.length];
-
-    useFrame(({ clock }) => {
-        if (ref.current) {
-            const pulse = 1 + 0.15 * Math.sin(clock.elapsedTime * 2.2 + index * 1.1);
-            ref.current.scale.setScalar(pulse);
+            if (distSq < maxDistSq) {
+                // limit connections per node to avoid visual clutter
+                if (connects < 4 && Math.random() > 0.2) {
+                    lines.push(nodes[i][0], nodes[i][1], nodes[i][2]);
+                    lines.push(nodes[j][0], nodes[j][1], nodes[j][2]);
+                    connects++;
+                }
+            }
         }
-    });
+    }
+    return new Float32Array(lines);
+};
 
-    return (
-        <mesh ref={ref} position={position}>
-            <sphereGeometry args={[0.14, 16, 16]} />
-            <meshStandardMaterial
-                color={color}
-                emissive={color}
-                emissiveIntensity={0.8}
-                roughness={0.2}
-                metalness={0.4}
-            />
-        </mesh>
-    );
-}
-
-// The full scene graph
-function NeuralScene() {
+const BrainGroup = () => {
     const groupRef = useRef();
+    const materialRef = useRef();
 
+    // Memoize the geometry generation so it only happens once
+    const { nodes, linePositions } = useMemo(() => {
+        const generatedNodes = generateBrainNodes(250); // density of brain
+        const generatedLines = generateConnections(generatedNodes, 1.0); // connect radius
+        return { nodes: generatedNodes, linePositions: generatedLines };
+    }, []);
+
+    // Gentle floating and rotation animation
     useFrame(({ clock }) => {
         if (groupRef.current) {
-            groupRef.current.rotation.y = Math.sin(clock.elapsedTime * 0.25) * 0.4;
-            groupRef.current.rotation.x = Math.sin(clock.elapsedTime * 0.18) * 0.12;
+            const t = clock.elapsedTime;
+            // Rotate the whole brain slowly
+            groupRef.current.rotation.y = t * 0.15;
+            // Slight tilt wobble
+            groupRef.current.rotation.x = Math.sin(t * 0.5) * 0.1;
+            groupRef.current.rotation.z = Math.cos(t * 0.5) * 0.05;
+        }
+
+        // Pulse the lines opacity slightly
+        if (materialRef.current) {
+            materialRef.current.opacity = 0.15 + Math.sin(clock.elapsedTime * 2) * 0.05;
         }
     });
 
     return (
-        <group ref={groupRef}>
-            {/* Connection lines */}
-            {CONNECTIONS.map(([a, b], i) => (
-                <Connection key={i} start={LAYERS[a]} end={LAYERS[b]} index={i} />
-            ))}
-            {/* Neuron nodes */}
-            {LAYERS.map((pos, i) => (
-                <Node key={i} position={pos} index={i} />
-            ))}
+        <group ref={groupRef} scale={[1.2, 1.2, 1.2]}>
+            {/* The nodes (Neurons) */}
+            {nodes.map((pos, i) => {
+                // Determine color based on position to give a gradient look
+                // Left hemisphere vs right, front to back
+                const isLeft = pos[0] < 0;
+                const isFront = pos[2] > 0;
+                const color = isLeft
+                    ? isFront ? '#6366f1' : '#818cf8' // Indigos
+                    : isFront ? '#ec4899' : '#d946ef'; // Pinks/Fuchsias
+
+                return (
+                    <mesh key={i} position={pos}>
+                        <sphereGeometry args={[0.06, 8, 8]} />
+                        <meshStandardMaterial
+                            color={color}
+                            emissive={color}
+                            emissiveIntensity={0.8}
+                            roughness={0.2}
+                            metalness={0.6}
+                        />
+                    </mesh>
+                );
+            })}
+
+            {/* The connections (Synapses) -> Single LineSegments object for high FPS */}
+            <lineSegments>
+                <bufferGeometry>
+                    <bufferAttribute
+                        attach="attributes-position"
+                        count={linePositions.length / 3}
+                        array={linePositions}
+                        itemSize={3}
+                    />
+                </bufferGeometry>
+                <lineBasicMaterial
+                    ref={materialRef}
+                    color="#a5b4fc"
+                    transparent
+                    opacity={0.15}
+                    depthWrite={false}
+                />
+            </lineSegments>
         </group>
     );
-}
+};
 
 const NeuralNetwork3D = () => {
     return (
-        <div className="w-full h-full">
+        <div className="w-full h-full relative">
             <Canvas
                 camera={{ position: [0, 0, 7], fov: 55 }}
                 style={{ background: 'transparent' }}
                 gl={{ alpha: true, antialias: true }}
             >
-                <ambientLight intensity={0.3} />
-                <pointLight position={[5, 5, 5]} intensity={1.5} color="#818cf8" />
-                <pointLight position={[-5, -3, -5]} intensity={1.0} color="#ec4899" />
-                <pointLight position={[0, 6, 2]} intensity={0.8} color="#06b6d4" />
-                <NeuralScene />
+                <ambientLight intensity={0.4} />
+                {/* Colored lights to enhance the brain dual-tone effect */}
+                <directionalLight position={[5, 3, 5]} intensity={1.5} color="#ec4899" />
+                <directionalLight position={[-5, 3, -5]} intensity={1.5} color="#6366f1" />
+                <directionalLight position={[0, -5, 0]} intensity={0.5} color="#06b6d4" />
+
+                <BrainGroup />
+
                 <OrbitControls
                     enableZoom={false}
                     enablePan={false}
                     autoRotate
-                    autoRotateSpeed={0.6}
-                    maxPolarAngle={Math.PI * 0.75}
-                    minPolarAngle={Math.PI * 0.25}
+                    autoRotateSpeed={0.5}
+                    maxPolarAngle={Math.PI * 0.65}
+                    minPolarAngle={Math.PI * 0.35}
                 />
             </Canvas>
         </div>

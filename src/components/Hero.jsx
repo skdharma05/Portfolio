@@ -116,7 +116,7 @@ const Hero = () => {
                             >
                                 <Cpu size={14} className="text-primary" />
                                 <span className="text-xs font-mono text-text-muted tracking-widest uppercase">
-                                    Neural Network
+                                    AI Brain
                                 </span>
                             </motion.div>
 
@@ -126,13 +126,10 @@ const Hero = () => {
                                 </Suspense>
                             </div>
 
-                            {/* Layer labels */}
-                            <div className="flex justify-between w-72 mt-1">
-                                {['Input', 'Hidden', 'Hidden', 'Output'].map((l) => (
-                                    <span key={l} className="text-[10px] font-mono text-text-muted">
-                                        {l}
-                                    </span>
-                                ))}
+                            {/* Hemisphere labels */}
+                            <div className="flex justify-between w-64 mt-1">
+                                <span className="text-[10px] font-mono text-primary/70">Left Hem.</span>
+                                <span className="text-[10px] font-mono text-secondary/70">Right Hem.</span>
                             </div>
                         </motion.div>
                     </div>
