@@ -7,7 +7,7 @@ import userResume from '../assets/dharma.pdf'
 export const personalInfo = {
     name: 'Dharma S',
     displayName: 'Dharma',
-    nameSuffix: '.S',
+    // nameSuffix: '.S',
     title: 'AI & Full-Stack Engineer',
     tagline: 'Building Intelligent, Scalable Systems',
     bio: "A passionate Full-Stack Engineer with a strong foundation in AI/ML. I build production-ready web apps and AI-powered systems using Python, React, FastAPI, and modern backend technologies. I love transforming complex problems into elegant, scalable solutions.",

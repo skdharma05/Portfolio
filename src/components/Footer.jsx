@@ -32,7 +32,7 @@ const Footer = () => {
                     <div>
                         <a href="#hero" className="text-2xl font-black tracking-tight mb-4 inline-block">
                             <span className="text-white">Dharma</span>
-                            <span className="gradient-text">.S</span>
+                            <span className="gradient-text"> .S</span>
                         </a>
                         <p className="text-text-secondary text-sm leading-relaxed mb-6 max-w-xs">
                             AI & Full-Stack Engineer building intelligent, scalable systems. Always curious, always building.

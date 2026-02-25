@@ -54,7 +54,7 @@ const Navbar = () => {
                         whileTap={{ scale: 0.95 }}
                     >
                         <span className="text-white">Dharma</span>
-                        <span className="gradient-text">.S</span>
+                        <span className="gradient-text"> .S</span>
                     </motion.a>
 
                     {/* Desktop nav */}

@@ -60,7 +60,7 @@ const Hero = () => {
                                 variants={fadeUp}
                                 className="text-5xl sm:text-6xl md:text-7xl font-black leading-[1.05] mb-4 tracking-tight"
                             >
-                                Hi, I'm{' '}
+                                Hi, I'm{'  '}
                                 <span className="gradient-text">{personalInfo.displayName}</span>
                                 <span className="text-primary">{personalInfo.nameSuffix}</span>
                             </motion.h1>
@@ -211,12 +211,12 @@ const Hero = () => {
                                 />
 
                                 {/* Profile image — no border, no bg box */}
-                                <div className="relative w-64 h-64 md:w-72 md:h-72 xl:w-80 xl:h-80">
+                                <div className="relative w-80 h-80 md:w-96 md:h-96 xl:w-[28rem] xl:h-[28rem] scale-105 transform mt-4">
                                     {personalInfo.profileImage ? (
                                         <img
                                             src={personalInfo.profileImage}
                                             alt={personalInfo.name}
-                                            className="w-full h-full object-cover rounded-full"
+                                            className="w-full h-full object-cover rounded-full border-none outline-none shadow-none"
                                             style={{ filter: 'drop-shadow(0 0 30px rgba(99,102,241,0.5))' }}
                                         />
                                     ) : (

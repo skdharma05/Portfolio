@@ -20,10 +20,19 @@ const Connect = () => {
     const ref = useRef(null);
     const inView = useInView(ref, { once: true, margin: '-80px' });
 
-    const hasProfiles = codingProfiles && codingProfiles.length > 0;
-    const hasSocials = socialLinks && socialLinks.length > 0;
+    // Combine data and remove duplicates by name to only show exactly the 3 requested links (GitHub, LeetCode, LinkedIn)
+    const combinedData = [];
+    const seen = new Set();
 
-    if (!hasProfiles && !hasSocials) return null;
+    // We expect codingProfiles and socialLinks to combine to our desired 3 unique items
+    [...codingProfiles, ...socialLinks].forEach(item => {
+        if (!seen.has(item.name)) {
+            seen.add(item.name);
+            combinedData.push(item);
+        }
+    });
+
+    if (combinedData.length === 0) return null;
 
     return (
         <section id="connect" ref={ref} className="py-24 md:py-32 relative bg-bg-secondary overflow-hidden">
@@ -47,114 +56,55 @@ const Connect = () => {
                     </motion.p>
                 </motion.div>
 
-                <div className="space-y-16">
-                    {/* Coding Profiles */}
-                    {hasProfiles && (
-                        <motion.div
-                            className="grid sm:grid-cols-2 lg:grid-cols-2 gap-6 max-w-4xl mx-auto"
-                            variants={staggerContainer(0.15)}
-                            initial="hidden"
-                            animate={inView ? 'visible' : 'hidden'}
-                        >
-                            {codingProfiles.map((profile) => {
-                                const Icon = iconMap[profile.icon] || FaGithub;
-                                return (
-                                    <motion.a
-                                        key={profile.name}
-                                        href={profile.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        variants={popIn}
-                                        className="group glass-card border border-white/5 p-6 hover:border-primary/30 transition-all duration-500 no-underline flex flex-col items-center text-center"
-                                        whileHover={{
-                                            y: -6,
-                                            boxShadow: `0 20px 50px rgba(0,0,0,0.4), 0 0 30px ${profile.color}25`,
-                                        }}
+                <div className="space-y-16 mt-12">
+                    <motion.div
+                        className="flex flex-wrap justify-center gap-6 md:gap-10 max-w-4xl mx-auto"
+                        variants={staggerContainer(0.15)}
+                        initial="hidden"
+                        animate={inView ? 'visible' : 'hidden'}
+                    >
+                        {combinedData.map((social) => {
+                            const Icon = iconMap[social.icon] || FaGithub;
+                            return (
+                                <motion.a
+                                    key={social.name}
+                                    href={social.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    variants={popIn}
+                                    className="group flex flex-col items-center gap-4 p-8 glass-card border-none outline-none rounded-[2rem] hover:bg-white/5 transition-all duration-300 w-36 sm:w-44 no-underline relative overflow-hidden"
+                                    whileHover={{
+                                        y: -10,
+                                        scale: 1.05,
+                                        boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 40px ${social.color || social.hoverColor || '#6366f1'}30`,
+                                    }}
+                                    whileTap={{ scale: 0.95 }}
+                                    aria-label={social.name}
+                                >
+                                    {/* Hover gradient background effect */}
+                                    <div
+                                        className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none"
+                                        style={{ background: `radial-gradient(circle at center, ${social.color || social.hoverColor || '#6366f1'}, transparent 70%)` }}
+                                    />
+
+                                    <motion.div
+                                        className="transition-colors duration-300 relative z-10"
+                                        whileHover={{ rotate: [0, -10, 10, 0], scale: 1.15 }}
+                                        transition={{ duration: 0.5 }}
                                     >
-                                        <div
-                                            className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
-                                            style={{
-                                                background: `${profile.color}15`,
-                                                border: `1px solid ${profile.color}30`,
-                                            }}
-                                        >
-                                            <Icon size={32} style={{ color: profile.color }} />
-                                        </div>
-
-                                        <h3 className="text-xl font-bold text-white mb-1 group-hover:text-primary transition-colors">
-                                            {profile.name}
-                                        </h3>
-                                        <p className="text-sm text-text-muted font-mono mb-3">{profile.username}</p>
-                                        <p className="text-sm text-text-secondary leading-relaxed mb-4 line-clamp-2">
-                                            {profile.description}
-                                        </p>
-
-                                        <div className="mt-auto flex items-center gap-3">
-                                            <span
-                                                className="text-xs font-semibold px-3 py-1.5 rounded-full"
-                                                style={{
-                                                    background: `${profile.color}15`,
-                                                    color: profile.color,
-                                                    border: `1px solid ${profile.color}30`,
-                                                }}
-                                            >
-                                                {profile.stats}
-                                            </span>
-                                            <ExternalLink
-                                                size={18}
-                                                className="text-text-muted group-hover:text-primary transition-colors"
-                                            />
-                                        </div>
-                                    </motion.a>
-                                );
-                            })}
-                        </motion.div>
-                    )}
-
-                    {/* Social Links */}
-                    {hasSocials && (
-                        <motion.div
-                            className="flex flex-wrap justify-center gap-5 md:gap-8 pt-6 border-t border-white/5"
-                            variants={staggerContainer(0.1)}
-                            initial="hidden"
-                            animate={inView ? 'visible' : 'hidden'}
-                        >
-                            {socialLinks.map((social) => {
-                                const Icon = iconMap[social.icon] || FaGithub;
-                                return (
-                                    <motion.a
-                                        key={social.name}
-                                        href={social.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        variants={popIn}
-                                        className="group flex flex-col items-center gap-3 p-6 glass-card border border-white/5 rounded-2xl hover:border-primary/30 transition-all duration-300 w-28 sm:w-32 no-underline"
-                                        whileHover={{
-                                            y: -8,
-                                            scale: 1.08,
-                                            boxShadow: `0 15px 40px rgba(0,0,0,0.4), 0 0 25px ${social.hoverColor}30`,
-                                        }}
-                                        whileTap={{ scale: 0.95 }}
-                                        aria-label={social.name}
-                                    >
-                                        <motion.div
-                                            className="transition-colors duration-300"
-                                            whileHover={{ rotate: [0, -10, 10, 0], scale: 1.2 }}
-                                            transition={{ duration: 0.4 }}
-                                        >
-                                            <Icon
-                                                size={32}
-                                                className="text-text-secondary group-hover:text-white transition-colors duration-300"
-                                            />
-                                        </motion.div>
-                                        <span className="text-sm text-text-muted font-medium group-hover:text-white transition-colors">
-                                            {social.name}
-                                        </span>
-                                    </motion.a>
-                                );
-                            })}
-                        </motion.div>
-                    )}
+                                        <Icon
+                                            size={48}
+                                            className="text-text-secondary group-hover:text-white transition-colors duration-300"
+                                            style={{ filter: `drop-shadow(0 0 10px ${social.color || social.hoverColor || '#ffffff'}40)` }}
+                                        />
+                                    </motion.div>
+                                    <span className="text-base text-text-secondary font-semibold group-hover:text-white transition-colors relative z-10">
+                                        {social.name}
+                                    </span>
+                                </motion.a>
+                            );
+                        })}
+                    </motion.div>
                 </div>
             </div>
         </section>
