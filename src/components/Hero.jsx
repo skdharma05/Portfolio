@@ -1,11 +1,11 @@
 import React, { useRef, lazy, Suspense } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { ArrowRight, Download, Sparkles } from 'lucide-react';
+import { ArrowRight, Download, Sparkles, MapPin, Mail, Code2, Cpu, Globe } from 'lucide-react';
 import ParticlesBackground from './ParticlesBackground';
 import { personalInfo, achievements } from '../data/portfolioData';
 import { fadeUp, fadeLeft, fadeRight, scaleIn, staggerContainer } from '../utils/animations';
 
-const Scene3D = lazy(() => import('./Scene3D'));
+const NeuralNetwork3D = lazy(() => import('./NeuralNetwork3D'));
 
 const Hero = () => {
     const ref = useRef(null);
@@ -15,7 +15,7 @@ const Hero = () => {
 
     return (
         <>
-            {/* HERO SECTION */}
+            {/* ── HERO SECTION ─────────────────────────────────────────────── */}
             <section
                 id="hero"
                 ref={ref}
@@ -26,7 +26,7 @@ const Hero = () => {
                     <ParticlesBackground />
                 </div>
 
-                {/* Animated gradient blurs */}
+                {/* Ambient blurs */}
                 <motion.div
                     className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full blur-3xl pointer-events-none"
                     style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)' }}
@@ -42,7 +42,8 @@ const Hero = () => {
 
                 <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
-                        {/* Left — Text content */}
+
+                        {/* Left — Text */}
                         <motion.div
                             variants={staggerContainer(0.12)}
                             initial="hidden"
@@ -100,16 +101,39 @@ const Hero = () => {
                             </motion.div>
                         </motion.div>
 
-                        {/* Right — 3D scene */}
+                        {/* Right — Neural Network 3D */}
                         <motion.div
-                            className="hidden lg:block h-[420px] xl:h-[480px]"
+                            className="hidden lg:flex flex-col items-center"
                             variants={fadeRight}
                             initial="hidden"
                             animate={inView ? 'visible' : 'hidden'}
                         >
-                            <Suspense fallback={<div className="w-full h-full" />}>
-                                <Scene3D />
-                            </Suspense>
+                            {/* Label above */}
+                            <motion.div
+                                className="flex items-center gap-2 mb-3"
+                                animate={{ opacity: [0.6, 1, 0.6] }}
+                                transition={{ duration: 3, repeat: Infinity }}
+                            >
+                                <Cpu size={14} className="text-primary" />
+                                <span className="text-xs font-mono text-text-muted tracking-widest uppercase">
+                                    Neural Network
+                                </span>
+                            </motion.div>
+
+                            <div className="h-[420px] xl:h-[480px] w-full">
+                                <Suspense fallback={<div className="w-full h-full" />}>
+                                    <NeuralNetwork3D />
+                                </Suspense>
+                            </div>
+
+                            {/* Layer labels */}
+                            <div className="flex justify-between w-72 mt-1">
+                                {['Input', 'Hidden', 'Hidden', 'Output'].map((l) => (
+                                    <span key={l} className="text-[10px] font-mono text-text-muted">
+                                        {l}
+                                    </span>
+                                ))}
+                            </div>
                         </motion.div>
                     </div>
                 </div>
@@ -131,20 +155,31 @@ const Hero = () => {
                 </motion.div>
             </section>
 
-            {/* ABOUT SECTION */}
+            {/* ── ABOUT SECTION ────────────────────────────────────────────── */}
             <section
                 id="about"
                 ref={aboutRef}
                 className="py-24 md:py-32 relative bg-bg-secondary overflow-hidden"
             >
-                {/* Ambient background blurs */}
-                <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute bottom-0 left-1/4 w-80 h-80 bg-secondary/5 rounded-full blur-3xl pointer-events-none" />
+                {/* Background effects */}
+                <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl" />
+                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
+                    {/* Subtle grid */}
+                    <div
+                        className="absolute inset-0 opacity-[0.025]"
+                        style={{
+                            backgroundImage:
+                                'linear-gradient(rgba(99,102,241,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.4) 1px, transparent 1px)',
+                            backgroundSize: '60px 60px',
+                        }}
+                    />
+                </div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     {/* Section header */}
                     <motion.div
-                        className="text-center mb-16"
+                        className="text-center mb-20"
                         variants={staggerContainer()}
                         initial="hidden"
                         animate={aboutInView ? 'visible' : 'hidden'}
@@ -155,131 +190,180 @@ const Hero = () => {
                         <motion.h2 variants={fadeUp} className="section-title">
                             Get to Know <span className="gradient-text">Me</span>
                         </motion.h2>
-                        <motion.p variants={fadeUp} className="section-subtitle">
-                            Engineer by trade, problem solver by passion
-                        </motion.p>
                     </motion.div>
 
-                    <div className="grid lg:grid-cols-5 gap-12 lg:gap-16 items-start">
-                        {/* Left — Profile image with glow */}
+                    <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+
+                        {/* ── LEFT: Profile image ── */}
                         <motion.div
-                            className="lg:col-span-2 flex justify-center lg:sticky lg:top-28"
+                            className="flex justify-center lg:justify-start"
                             variants={fadeLeft}
                             initial="hidden"
                             animate={aboutInView ? 'visible' : 'hidden'}
                         >
-                            <div className="relative group">
-                                {/* Pulsing glow behind image */}
+                            <div className="relative">
+                                {/* Large ambient glow */}
                                 <motion.div
-                                    className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-primary/20 to-secondary/20 blur-xl opacity-60 -z-10"
-                                    animate={{
-                                        opacity: [0.4, 0.7, 0.4],
-                                        scale: [0.95, 1.02, 0.95],
+                                    className="absolute -inset-8 rounded-full pointer-events-none"
+                                    style={{
+                                        background:
+                                            'radial-gradient(ellipse at center, rgba(99,102,241,0.2) 0%, rgba(236,72,153,0.1) 50%, transparent 70%)',
                                     }}
-                                    transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                                    animate={{ scale: [1, 1.08, 1], opacity: [0.6, 1, 0.6] }}
+                                    transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
                                 />
 
-                                <div className="w-60 h-60 md:w-72 md:h-72 rounded-3xl overflow-hidden border-2 border-primary/20 shadow-glow group-hover:shadow-glow-lg transition-shadow duration-500">
+                                {/* Profile image — no border, no bg box */}
+                                <div className="relative w-64 h-64 md:w-72 md:h-72 xl:w-80 xl:h-80">
                                     {personalInfo.profileImage ? (
                                         <img
                                             src={personalInfo.profileImage}
                                             alt={personalInfo.name}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-cover rounded-full"
+                                            style={{ filter: 'drop-shadow(0 0 30px rgba(99,102,241,0.5))' }}
                                         />
                                     ) : (
-                                        <div className="w-full h-full bg-gradient-to-br from-bg-card via-primary/20 to-secondary/20 flex items-center justify-center relative">
-                                            <span className="text-8xl font-black gradient-text select-none">
+                                        /* Placeholder: initial letter with gradient glow, NO background box */
+                                        <div
+                                            className="w-full h-full flex items-end justify-center pb-2"
+                                            style={{ filter: 'drop-shadow(0 0 40px rgba(99,102,241,0.6))' }}
+                                        >
+                                            <span className="text-[10rem] font-black gradient-text select-none leading-none">
                                                 {personalInfo.displayName[0]}
                                             </span>
-                                            {/* Code-style decorative overlay */}
-                                            <div className="absolute bottom-3 left-3 right-3 px-3 py-2 rounded-lg bg-black/40 backdrop-blur-sm border border-white/10">
-                                                <p className="text-xs font-mono text-primary/80 truncate">
-                                                    {'>'} {personalInfo.title}
-                                                </p>
-                                            </div>
                                         </div>
                                     )}
+
+                                    {/* Floating skill tags */}
+                                    <motion.div
+                                        className="absolute -top-4 -right-10 px-3 py-1.5 rounded-full bg-bg-primary/80 border border-primary/30 backdrop-blur-sm"
+                                        animate={{ y: [0, -6, 0] }}
+                                        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                                    >
+                                        <span className="text-xs font-mono text-primary flex items-center gap-1.5">
+                                            <Code2 size={11} /> Python · React
+                                        </span>
+                                    </motion.div>
+                                    <motion.div
+                                        className="absolute -bottom-4 -left-8 px-3 py-1.5 rounded-full bg-bg-primary/80 border border-secondary/30 backdrop-blur-sm"
+                                        animate={{ y: [0, 6, 0] }}
+                                        transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                                    >
+                                        <span className="text-xs font-mono text-secondary flex items-center gap-1.5">
+                                            <Cpu size={11} /> AI · ML
+                                        </span>
+                                    </motion.div>
+                                    <motion.div
+                                        className="absolute top-1/2 -right-14 -translate-y-1/2 px-3 py-1.5 rounded-full bg-bg-primary/80 border border-accent/30 backdrop-blur-sm"
+                                        animate={{ y: [0, -4, 0] }}
+                                        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                                    >
+                                        <span className="text-xs font-mono text-accent flex items-center gap-1.5">
+                                            <Globe size={11} /> FastAPI
+                                        </span>
+                                    </motion.div>
                                 </div>
 
-                                {/* Decorative rings */}
-                                <div className="absolute -inset-3 border border-primary/10 rounded-[2rem] -z-10 group-hover:border-primary/20 transition-colors duration-500" />
-                                <div className="absolute -inset-6 border border-primary/5 rounded-[2.5rem] -z-10" />
-
-                                {/* Status badge */}
+                                {/* "Open to work" badge */}
                                 {personalInfo.available && (
-                                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-1.5 rounded-full bg-bg-primary/90 border border-green-500/30 backdrop-blur-sm">
-                                        <span className="w-2 h-2 rounded-full bg-green-400 animate-ping-slow" />
-                                        <span className="text-xs font-medium text-green-400">Open to work</span>
-                                    </div>
+                                    <motion.div
+                                        className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 px-5 py-2 rounded-full bg-bg-primary/90 border border-green-500/30 backdrop-blur-sm whitespace-nowrap shadow-lg"
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={aboutInView ? { opacity: 1, y: 0 } : {}}
+                                        transition={{ delay: 0.6 }}
+                                    >
+                                        <motion.span
+                                            className="w-2 h-2 rounded-full bg-green-400"
+                                            animate={{ opacity: [1, 0.3, 1] }}
+                                            transition={{ duration: 1.5, repeat: Infinity }}
+                                        />
+                                        <span className="text-xs font-semibold text-green-400">Open to Work</span>
+                                    </motion.div>
                                 )}
                             </div>
                         </motion.div>
 
-                        {/* Right — Bio + details + achievements */}
+                        {/* ── RIGHT: Bio, details, stats ── */}
                         <motion.div
-                            className="lg:col-span-3 space-y-8"
+                            className="space-y-8"
                             variants={staggerContainer(0.1)}
                             initial="hidden"
                             animate={aboutInView ? 'visible' : 'hidden'}
                         >
                             {/* Bio */}
                             <motion.div variants={fadeUp} className="space-y-4">
+                                <h3 className="text-2xl font-bold text-white">
+                                    AI & Full-Stack Engineer
+                                </h3>
                                 <p className="text-text-secondary text-base sm:text-lg leading-relaxed">
                                     {personalInfo.bio}
                                 </p>
-                                <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted">
-                                    <span className="flex items-center gap-1.5">📍 {personalInfo.location}</span>
-                                    <span className="w-1 h-1 rounded-full bg-text-muted" />
-                                    <a
-                                        href={`mailto:${personalInfo.email}`}
-                                        className="flex items-center gap-1.5 hover:text-primary transition-colors"
-                                    >
-                                        ✉️ {personalInfo.email}
-                                    </a>
+                            </motion.div>
+
+                            {/* Contact details */}
+                            <motion.div variants={fadeUp} className="flex flex-col gap-2.5">
+                                <a
+                                    href={`mailto:${personalInfo.email}`}
+                                    className="flex items-center gap-3 text-text-muted hover:text-primary transition-colors text-sm group"
+                                >
+                                    <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                                        <Mail size={14} className="text-primary" />
+                                    </div>
+                                    {personalInfo.email}
+                                </a>
+                                <div className="flex items-center gap-3 text-text-muted text-sm">
+                                    <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+                                        <MapPin size={14} className="text-primary" />
+                                    </div>
+                                    {personalInfo.location}
                                 </div>
                             </motion.div>
 
                             {/* Gradient divider */}
                             <motion.div
                                 variants={fadeUp}
-                                className="h-px w-full bg-gradient-to-r from-transparent via-primary/30 to-transparent"
+                                className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
                             />
 
-                            {/* Achievement cards */}
+                            {/* Achievement stat cards */}
                             <motion.div
                                 variants={fadeUp}
-                                className="grid grid-cols-2 sm:grid-cols-4 gap-4"
+                                className="grid grid-cols-2 sm:grid-cols-4 gap-3"
                             >
                                 {achievements.map((item) => (
                                     <motion.div
                                         key={item.label}
                                         variants={scaleIn}
-                                        className="relative glass-card border border-white/5 p-5 text-center hover:border-primary/30 transition-all duration-300 group overflow-hidden"
-                                        whileHover={{ y: -4, scale: 1.02 }}
+                                        className="relative glass-card border border-white/5 p-4 text-center hover:border-primary/30 transition-all duration-300 group overflow-hidden cursor-default"
+                                        whileHover={{ y: -4, scale: 1.03 }}
                                     >
-                                        {/* Bottom gradient accent line */}
+                                        {/* Hover bottom gradient bar */}
                                         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-secondary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                        {/* Hover top-left corner glow */}
+                                        <div className="absolute -top-4 -left-4 w-10 h-10 bg-primary/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                                         <span className="text-2xl block mb-1.5 group-hover:scale-110 transition-transform duration-300">
                                             {item.icon}
                                         </span>
-                                        <p className="text-2xl font-bold gradient-text mb-0.5">
+                                        <p className="text-xl font-bold gradient-text mb-0.5">
                                             {item.value}
                                         </p>
-                                        <p className="text-xs text-text-muted font-medium">{item.label}</p>
+                                        <p className="text-[11px] text-text-muted font-medium leading-tight">
+                                            {item.label}
+                                        </p>
                                     </motion.div>
                                 ))}
                             </motion.div>
 
-                            {/* Quick action */}
-                            <motion.div variants={fadeUp} className="flex flex-wrap gap-3 pt-2">
+                            {/* CTAs */}
+                            <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
                                 <motion.a
                                     href="#contact"
                                     className="btn-primary text-sm py-2.5 px-6"
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                 >
-                                    <Sparkles size={16} />
+                                    <Sparkles size={15} />
                                     Let's Talk
                                 </motion.a>
                                 <motion.a
@@ -288,7 +372,7 @@ const Hero = () => {
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                 >
-                                    <Download size={16} />
+                                    <Download size={15} />
                                     Resume
                                 </motion.a>
                             </motion.div>

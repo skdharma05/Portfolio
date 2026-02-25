@@ -6,7 +6,6 @@ import Skills from './components/Skills';
 import Projects from './components/Projects';
 import CallToAction from './components/CallToAction';
 import ResumeDownload from './components/ResumeDownload';
-import Articles from './components/Articles';
 import CodingProfiles from './components/CodingProfiles';
 import SocialLinks from './components/SocialLinks';
 import Contact from './components/Contact';
@@ -27,7 +26,6 @@ function App() {
                     <Projects />
                     <CallToAction />
                     <ResumeDownload />
-                    <Articles />
                     <CodingProfiles />
                     <SocialLinks />
                     <Contact />
