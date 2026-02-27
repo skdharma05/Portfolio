@@ -1,7 +1,7 @@
 // ============================================================
 // PORTFOLIO CENTRALIZED DATA — Dharma S
 // ============================================================
-import userImg from '../assets/luffy.png'
+import userImg from '../assets/dharma.png'
 import userResume from '../assets/dharma.pdf'
 
 export const personalInfo = {
