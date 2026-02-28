@@ -10,7 +10,7 @@ export const personalInfo = {
     // nameSuffix: '.S',
     title: 'AI & Full-Stack Engineer',
     tagline: 'Building Intelligent, Scalable Systems',
-    bio: "A passionate Full-Stack Engineer with a strong foundation in AI/ML. I build production-ready web apps and AI-powered systems using Python, React, FastAPI, and modern backend technologies. I love transforming complex problems into elegant, scalable solutions.",
+    bio: "A passionate Full-Stack Engineer with a strong foundation in AI/ML, currently expanding my expertise into Data Engineering. I build production-ready web apps and AI-powered systems using Python, React, FastAPI, and modern backend technologies. I love transforming complex problems into elegant, scalable solutions.",
     location: 'Perambalur, Tamil Nadu, India',
     email: 'skdharma05@gmail.com',
     phone: '+91 7904248094',
